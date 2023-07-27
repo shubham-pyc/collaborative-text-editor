@@ -36,6 +36,12 @@ Once both the backend and frontend are running, you can access the Online Shared
 
 ## Approach
 
-For collebration we need the manage conflitcs. 
 
-ShareDB is a realtime database backend based on Operational Transformation (OT).
+1. ShareDB: A robust and mature backend database built on the principles of Operational Transformation to manage concurrent edits and conflicts effectively.
+
+2. QuillJS: A modern and customizable rich text editor that provides a user-friendly interface for editing and formatting text content.
+
+3. Websockets: The communication protocol of choice for real-time applications, ensuring instant data transmission between the server and clients.
+
+4. React: A popular frontend library used to build the user interface, allowing for efficient component-based development and a seamless user experience.
+
