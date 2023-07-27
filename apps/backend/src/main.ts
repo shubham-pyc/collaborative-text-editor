@@ -1,91 +1,37 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import WebSocket from 'ws';
+import WebSocketJSONStream from '@teamwork/websocket-json-stream';
+import ShareDB from 'sharedb';
+import { type } from 'rich-text';
 
-// import { authenticateJWT } from './authMiddleware'; // Import the custom middleware
-import express from 'express';
-import { login, registerUser, hello } from './api';
-// import passport, { jwtAuthMiddleware } from './middleware';
-import cors from 'cors';
-import passportJWT from 'passport-jwt';
-import passport from './middleware';
-import LocalStrategy from 'passport-local';
-import bcrypt from 'bcrypt';
+// Quill editor has a rich text datatype
+//Making sharedb compitable with qill editor
+ShareDB.types.register(type);
 
-import { JWT_SECRETE } from './constants';
-import { prisma } from './database';
+// Making ShareDB instance
+const shareDBServer = new ShareDB();
+const connection = shareDBServer.connect();
 
-// Replace 'your-database-name.db' wAth your desired SQLite database name
+// Making this first document name
+const doc = connection.get('documents', 'firstDocument');
 
+doc.fetch(function (err) {
+  if (err) throw err;
+  if (doc.type === null) {
+    //Create a new document and add some text to this
+    doc.create([{ insert: 'Jenni is awesome!' }], 'rich-text', () => {
+      const wss = new WebSocket.Server({ port: 8080 });
 
-const ExtractJWT = passportJWT.ExtractJwt;
-const JWTStrategy = passportJWT.Strategy;
-
-passport.use(
-  new LocalStrategy({ usernameField: 'email' },async (email: string, password, done) => {
-    try {
-      const user = await prisma.users.findUnique({ where: { email: email } });
-      if (!user) {
-
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    } catch (error) {
-
-      return done(error);
-    }
-  })
-);
-
-passport.use(
-  new JWTStrategy(
-    {
-      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: JWT_SECRETE,
-    },
-    async (jwtPayload, done) => {
-      const user = await prisma.users.findUnique({
-        where: { id: jwtPayload.id },
+      wss.on('connection', function connection(ws) {
+        // For transport we are using a ws JSON stream for communication
+        // that can read and write js objects.
+        const jsonStream = new WebSocketJSONStream(ws);
+        try {
+          shareDBServer.listen(jsonStream);
+        } catch (error) {
+          console.warn(error);
+        }
       });
-      if (user) {
-        done(null, user);
-      } else {
-        done(null, false);
-      }
-
-    }
-  )
-);
-export const jwtAuthMiddleware = () => passport.authenticate('jwt', { session: false });
-
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-// API endpoints
-app.post('/register', registerUser);
-
-app.post('/login', login);
-
-app.get('/hello', jwtAuthMiddleware(), hello);
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:${PORT}`);
+    });
+    return;
+  }
 });
