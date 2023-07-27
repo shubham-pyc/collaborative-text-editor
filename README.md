@@ -10,7 +10,6 @@ To set up the Online Shared Text Editor, follow these steps:
 
 ```bash
 git clone https://github.com/shubham-pyc/fullstack-jenni.git
-Install project dependencies:
 ```
 2. Install project dependencies:
 ```bash
