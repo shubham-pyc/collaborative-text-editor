@@ -1,7 +1,7 @@
 # Online Shared Text Editor
 Welcome to the Online Shared Text Editor! This project allows multiple users to collaboratively edit and share text in real-time. It provides a seamless editing experience with instant updates across all connected users.
 
-![Alt Text](docs/demo.gif)
+![Demo](docs/demo.gif)
 
 
 # Installation
