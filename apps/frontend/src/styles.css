@@ -7,11 +7,23 @@
     align-items: center;
     width: 100%;
 }
-
+.body {
+    background-color: #F3F3F3;
+}
 
 .container {
     margin-top: '5px';
     /* border: '1px solid'; */
-    border: 1px solid black;
-    width: 50%;
+    /* border: 1px solid black; */
+    /* width: 50%; */
+}
+
+.container .ql-editor {
+    min-height: 11in;
+    min-width: 8in;
+    padding: 1in;
+    background-color: white;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+
+
 }
