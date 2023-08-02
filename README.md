@@ -12,11 +12,11 @@ To set up the Online Shared Text Editor, follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/shubham-pyc/fullstack-jenni.git
+git clone https://github.com/shubham-pyc/collaborative-text-editor.git
 ```
 2. Install project dependencies:
 ```bash
-cd fullstack-jenni
+cd collaborative-text-editor
 yarn install
 ```
 
