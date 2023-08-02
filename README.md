@@ -18,6 +18,7 @@ git clone https://github.com/shubham-pyc/collaborative-text-editor.git
 ```bash
 cd collaborative-text-editor
 yarn install
+npm install --global nx@latest
 ```
 
 3. Serve the backend:
